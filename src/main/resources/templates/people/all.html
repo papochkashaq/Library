@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All people</title>
+</head>
+<body>
+<div th:if="${people.isEmpty()}">
+    <p>No people found.</p>
+</div>
+<table th:unless="${people.isEmpty()}">
+    <caption>All people</caption>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Year of Birth</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="person : ${people}">
+        <td>
+            <a th:href="@{/people/{id}(id=${person.getId()})}" th:text="${person.getFullName()}">Full Name</a>
+        </td>
+        <td th:text="${person.getYearOfBirth()}">Year of Birth</td>
+        <td>
+            <form th:method="GET" th:action="@{/people/{id}(id=${person.getId()})}">
+                <button type="submit">Edit</button>
+            </form>
+        </td>
+        <td>
+            <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<p><a href="/people/new">Add new person.</a></p>
+</body>
+</html>

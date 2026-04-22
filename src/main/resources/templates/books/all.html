@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All books</title>
+</head>
+<body>
+<div th:if="${books.isEmpty()}">
+    <p>No books found.</p>
+</div>
+<table th:unless="${books.isEmpty()}">
+    <caption>All books</caption>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Year</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td>
+            <a th:href="@{/books/{id}(id=${book.getId()})}" th:text="${book.title}" }>Title</a>
+        </td>
+        <td th:text="${book.author}">Author</td>
+        <td th:text="${book.year}">Year</td>
+        <td>
+            <form th:method="GET" th:action="@{/books/{id}(id=${book.getId()})}">
+                <button type="submit">Edit</button>
+            </form>
+        </td>
+        <td>
+            <form th:method="DELETE" th:action="@{/books/{id}(id=${book.getId()})}">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<p><a href="/books/new">Add new book.</a></p>
+</body>
+</html>
