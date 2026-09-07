@@ -1,64 +1,64 @@
 # Library
 
-Веб-приложение для управления библиотекой: учёт книг, читателей и выдачи книг на руки. Реализовано на Spring Boot с серверным рендерингом страниц через Thymeleaf.
+A web application for library management: tracking books, readers, and book lending. Built with Spring Boot using server-side rendering via Thymeleaf.
 
-## Возможности
+## Features
 
-- **Каталог книг**: просмотр списка книг с постраничной навигацией и опциональной сортировкой по году издания.
-- **Карточка книги**: просмотр детальной информации о книге и её текущем владельце.
-- **Добавление / редактирование / удаление книг** с валидацией полей (название, автор, год издания).
-- **Поиск книги по названию** (частичное совпадение).
-- **Выдача и возврат книги**: назначение читателя владельцем книги с фиксацией даты выдачи и снятие книги с читателя.
-- **Контроль просрочки**: книга считается просроченной, если прошло более 10 дней с даты выдачи (см. [`Book.isOverdue()`](src/main/java/com/alderson/library/model/Book.java:39)).
-- **Учёт читателей**: просмотр списка, добавление, редактирование, удаление читателей с валидацией (уникальное ФИО, корректный год рождения).
-- **Автоматическое освобождение книг** при удалении читателя (см. [`Person.releaseBooks()`](src/main/java/com/alderson/library/model/Person.java:35)).
+- **Book catalog**: browse the list of books with pagination and optional sorting by publication year.
+- **Book details**: view detailed information about a book and its current owner.
+- **Add / edit / delete books** with field validation (title, author, publication year).
+- **Search books by title** (partial match).
+- **Lending and returning books**: assign a reader as the book's owner with the lending date recorded, and release the book from the reader.
+- **Overdue tracking**: a book is considered overdue if more than 10 days have passed since the lending date (see [`Book.isOverdue()`](src/main/java/com/alderson/library/model/Book.java:39)).
+- **Reader management**: browse the list, add, edit, and delete readers with validation (unique full name, valid birth year).
+- **Automatic book release** when a reader is deleted (see [`Person.releaseBooks()`](src/main/java/com/alderson/library/model/Person.java:35)).
 
-## Технологический стек
+## Tech Stack
 
 - **Java 25**
 - **Spring Boot 4.0.5**
   - Spring Web / Spring MVC
   - Spring Data JPA
   - Spring Boot Validation
-  - Thymeleaf (шаблонизатор представлений)
-- **PostgreSQL** — основная база данных
-- **Lombok** — сокращение шаблонного кода моделей
-- **Maven** — сборка проекта, упаковка в `war`
+  - Thymeleaf (view templating engine)
+- **PostgreSQL** — primary database
+- **Lombok** — reduces model boilerplate code
+- **Maven** — project build, packaged as `war`
 
-## Требования
+## Requirements
 
 - JDK 25+
-- Maven 3.9+ (либо использовать входящий в проект Maven Wrapper — [`mvnw`](mvnw) / [`mvnw.cmd`](mvnw.cmd))
-- PostgreSQL 12+ (запущенный локально или доступный по сети)
+- Maven 3.9+ (or use the Maven Wrapper included in the project — [`mvnw`](mvnw) / [`mvnw.cmd`](mvnw.cmd))
+- PostgreSQL 12+ (running locally or accessible over the network)
 
-## Структура проекта
+## Project Structure
 
 ```
 src/main/java/com/alderson/library/
-├── LibraryApplication.java      # Точка входа Spring Boot
-├── ServletInitializer.java      # Инициализация для деплоя в виде WAR
+├── LibraryApplication.java      # Spring Boot entry point
+├── ServletInitializer.java      # Initialization for WAR deployment
 ├── controller/
-│   ├── IndexController.java     # Главная страница
-│   ├── BookController.java      # CRUD и операции над книгами
-│   └── PersonController.java    # CRUD над читателями
+│   ├── IndexController.java     # Home page
+│   ├── BookController.java      # CRUD and operations on books
+│   └── PersonController.java    # CRUD on readers
 ├── model/
-│   ├── Book.java                # Сущность книги
-│   └── Person.java              # Сущность читателя
+│   ├── Book.java                # Book entity
+│   └── Person.java              # Reader entity
 ├── repository/
-│   ├── BookRepository.java      # JPA-репозиторий книг
-│   └── PersonRepository.java    # JPA-репозиторий читателей
+│   ├── BookRepository.java      # JPA repository for books
+│   └── PersonRepository.java    # JPA repository for readers
 └── service/
-    ├── BookService.java         # Бизнес-логика по книгам
-    └── PersonService.java       # Бизнес-логика по читателям
+    ├── BookService.java         # Business logic for books
+    └── PersonService.java       # Business logic for readers
 
 src/main/resources/
-├── application.properties       # Конфигурация приложения
-└── templates/                   # Thymeleaf-шаблоны (index, books/*, people/*)
+├── application.properties       # Application configuration
+└── templates/                   # Thymeleaf templates (index, books/*, people/*)
 ```
 
-## Настройка базы данных
+## Database Setup
 
-Перед запуском создайте базу данных PostgreSQL и при необходимости скорректируйте параметры подключения в [`application.properties`](src/main/resources/application.properties):
+Before running the application, create a PostgreSQL database and adjust the connection settings in [`application.properties`](src/main/resources/application.properties) if needed:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
@@ -66,13 +66,13 @@ spring.datasource.username=postgres
 spring.datasource.password=0451
 ```
 
-Схема базы данных создаётся и обновляется автоматически благодаря настройке `spring.jpa.hibernate.ddl-auto=update`, отдельных SQL-миграций выполнять не требуется.
+The database schema is created and updated automatically thanks to the `spring.jpa.hibernate.ddl-auto=update` setting, so no separate SQL migrations are required.
 
-> ⚠️ По умолчанию в файле конфигурации указаны логин и пароль для локальной разработки. Для рабочего окружения обязательно замените их на актуальные учётные данные (например, через переменные окружения или профили Spring).
+> ⚠️ By default, the configuration file contains a login and password for local development. For a production environment, be sure to replace them with actual credentials (for example, via environment variables or Spring profiles).
 
-## Запуск проекта
+## Running the Project
 
-### Через Maven Wrapper
+### Using Maven Wrapper
 
 ```bash
 # Windows
@@ -82,56 +82,56 @@ mvnw.cmd spring-boot:run
 ./mvnw spring-boot:run
 ```
 
-### Через установленный Maven
+### Using an installed Maven
 
 ```bash
 mvn spring-boot:run
 ```
 
-После запуска приложение будет доступно по адресу:
+Once started, the application will be available at:
 
 ```
 http://localhost:8081
 ```
 
-Порт можно изменить в [`application.properties`](src/main/resources/application.properties:2) (параметр `server.port`).
+The port can be changed in [`application.properties`](src/main/resources/application.properties:2) (the `server.port` parameter).
 
-## Сборка
+## Build
 
-Проект собирается в артефакт `war`:
+The project is built as a `war` artifact:
 
 ```bash
 mvnw.cmd clean package
 ```
 
-Полученный файл будет находиться в каталоге `target/`.
+The resulting file will be located in the `target/` directory.
 
-## Основные маршруты
+## Main Routes
 
-| Метод | Путь | Описание |
+| Method | Path | Description |
 |---|---|---|
-| `GET` | `/` | Главная страница |
-| `GET` | `/books` | Список книг (параметры `page`, `books_per_page`, `sort_by_year`) |
-| `GET` | `/books/{id}` | Карточка книги |
-| `GET` | `/books/new` | Форма добавления книги |
-| `POST` | `/books/new` | Сохранение новой книги |
-| `GET` | `/books/edit/{id}` | Форма редактирования книги |
-| `PATCH` | `/books/{id}` | Обновление книги |
-| `PATCH` | `/books/{id}/add-owner` | Назначить читателя владельцем книги |
-| `PATCH` | `/books/{id}/delete-owner` | Освободить книгу от владельца |
-| `DELETE` | `/books/{id}` | Удаление книги |
-| `GET` / `POST` | `/books/search` | Поиск книги по названию |
-| `GET` | `/people` | Список читателей |
-| `GET` | `/people/new` | Форма добавления читателя |
-| `POST` | `/people/new` | Сохранение нового читателя |
-| `GET` | `/people/{id}` | Карточка читателя |
-| `GET` | `/people/edit/{id}` | Форма редактирования читателя |
-| `PATCH` | `/people/{id}` | Обновление читателя |
-| `DELETE` | `/people/{id}` | Удаление читателя |
+| `GET` | `/` | Home page |
+| `GET` | `/books` | List of books (parameters `page`, `books_per_page`, `sort_by_year`) |
+| `GET` | `/books/{id}` | Book details |
+| `GET` | `/books/new` | Add book form |
+| `POST` | `/books/new` | Save a new book |
+| `GET` | `/books/edit/{id}` | Edit book form |
+| `PATCH` | `/books/{id}` | Update a book |
+| `PATCH` | `/books/{id}/add-owner` | Assign a reader as the book's owner |
+| `PATCH` | `/books/{id}/delete-owner` | Release the book from its owner |
+| `DELETE` | `/books/{id}` | Delete a book |
+| `GET` / `POST` | `/books/search` | Search for a book by title |
+| `GET` | `/people` | List of readers |
+| `GET` | `/people/new` | Add reader form |
+| `POST` | `/people/new` | Save a new reader |
+| `GET` | `/people/{id}` | Reader details |
+| `GET` | `/people/edit/{id}` | Edit reader form |
+| `PATCH` | `/people/{id}` | Update a reader |
+| `DELETE` | `/people/{id}` | Delete a reader |
 
-> Методы `PATCH` и `DELETE` из HTML-форм передаются через скрытое поле `_method` благодаря настройке `spring.mvc.hiddenmethod.filter.enabled=true`.
+> `PATCH` and `DELETE` methods from HTML forms are passed via the hidden `_method` field thanks to the `spring.mvc.hiddenmethod.filter.enabled=true` setting.
 
-## Тестирование
+## Testing
 
 ```bash
 mvnw.cmd test
